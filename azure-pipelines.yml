@@ -12,7 +12,9 @@ pool:
 variables:
   buildConfiguration: 'Release'
   myproject: 'BlazorPeliculas/Server/BlazorPeliculas.Server.csproj'
-
+  # To ignore SSL error uncomment the below variable
+  VSTS_ARM_REST_IGNORE_SSL_ERRORS: true
+  
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
