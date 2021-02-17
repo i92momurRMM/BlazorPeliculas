@@ -12,7 +12,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  myproyect: 'BlazorPeliculas/BlazorPeliculas/Server/BlazorPeliculas.Server.csproj'
+  myproyect: 'BlazorPeliculas/Server/BlazorPeliculas.Server.csproj'
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
