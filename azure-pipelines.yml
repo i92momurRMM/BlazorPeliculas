@@ -3,16 +3,15 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-# El script se lanza sobre la rama master
 trigger:
-- master
+- main
 
 pool:
   vmImage: 'vs2017-win2016'
 
 variables:
   buildConfiguration: 'Release'
-  myproyect: 'BlazorPeliculas/Server/BlazorPeliculas.Server.csproj'
+  myproject: 'BlazorPeliculas/Server/BlazorPeliculas.Server.csproj'
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
