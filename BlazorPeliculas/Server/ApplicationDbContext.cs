@@ -50,6 +50,9 @@ namespace BlazorPeliculas.Server
                 { Id = roleAdminId, Name = "admin", NormalizedName = "admin" };
 
             modelBuilder.Entity<IdentityRole>().HasData(roleAdmin);
+
+            modelBuilder.Entity<Genero>().HasData(new Genero()
+            { Id = 1, Nombre = "Accion" });
             // PM> Add-Migration RolAdmin
             // PM> Update-Database
 
