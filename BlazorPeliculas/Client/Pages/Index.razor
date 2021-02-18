@@ -2,14 +2,15 @@
 @page "/index"
 
 @inject IRepositorio  repositorio
+@inject IStringLocalizer<Resource> localizer
 
 <div>
-    <h3>En Cartelera</h3>
+	<h3>@localizer["index.cartelera"]</h3>
     <ListadoPeliculas Peliculas="EnCartelera" />
 </div>
 
 <div>
-    <h3>Próximos Estrenos</h3>
+	<h3>@localizer["index.estrenos"]</h3>
     <ListadoPeliculas Peliculas="FuturosEstrenos" />
 </div>
 
