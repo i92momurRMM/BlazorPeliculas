@@ -2,25 +2,43 @@
 @inject IRepositorio repositorio
 @inject NavigationManager navigationManager
 @inject IMostrarMensajes mostrarMensajes
+@inject IJSRuntime js
+@inject AppState appState
 @attribute [Authorize(Roles = "admin")]
 
 <h3>Crear Persona</h3>
 
 <FormularioPersonas OnValidSubmit="Crear" Persona="Persona" />
 
-@code {
-    private Persona Persona = new Persona();
+@code { private Persona Persona = new Persona();
 
-    async Task Crear()
-    {
-        var httpResponse = await repositorio.Post("api/personas", Persona);
-        if (httpResponse.Error)
-        {
-            await mostrarMensajes.MostrarMensajeError(await httpResponse.GetBody());
-        }
-        else
-        {
-            navigationManager.NavigateTo("/personas");
-        }
-    }
-}
+	async Task Crear()
+	{
+		try
+		{
+			var httpResponse = await repositorio.Post("api/personas", Persona);
+			if (httpResponse.Error)
+			{
+				await mostrarMensajes.MostrarMensajeError(await httpResponse.GetBody());
+			}
+			else
+			{
+				navigationManager.NavigateTo("/personas");
+			}
+		}
+		catch (Exception ex)
+		{
+			// TODO, esta logica que es igual para todos nos la podemos llevar al repositorio.cs
+			if (ex.GetType().ToString() == "WebAssembly.JSException" || ex.Message == "TypeError: Failed to fetch")
+			{
+				await js.GuardarRegistroParaCrear("api/personas", Persona);
+				// Notificamos que hay un cambio en el contador de sincronizaciones pendientes.
+				await appState.NotificarActualizarSincronizacionesPendientes();
+				navigationManager.NavigateTo("/personas");
+			}
+			else
+			{
+				throw ex;
+			}
+		}
+	} }

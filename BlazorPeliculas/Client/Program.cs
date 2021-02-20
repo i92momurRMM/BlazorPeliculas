@@ -68,6 +68,7 @@ namespace BlazorPeliculas.Client
             services.AddScoped<IRepositorio, Repositorio>();
             services.AddScoped<IMostrarMensajes, MostrarMensajes>();
             services.AddApiAuthorization();
+            services.AddSingleton<AppState>();
 
         }
     }
