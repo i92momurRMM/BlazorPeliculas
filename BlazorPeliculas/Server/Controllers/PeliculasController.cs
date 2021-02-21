@@ -23,16 +23,19 @@ namespace BlazorPeliculas.Server.Controllers
         private readonly IAlmacenadorArchivos almacenadorDeArchivos;
         private readonly IMapper mapper;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly NotificacionesService notificacionesService;
 
         public PeliculasController(ApplicationDbContext context,
             IAlmacenadorArchivos almacenadorDeArchivos,
             IMapper mapper,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager,
+            NotificacionesService notificacionesService)
         {
             this.context = context;
             this.almacenadorDeArchivos = almacenadorDeArchivos;
             this.mapper = mapper;
             this.userManager = userManager;
+            this.notificacionesService = notificacionesService;
         }
 
         [HttpGet]
@@ -212,6 +215,12 @@ namespace BlazorPeliculas.Server.Controllers
 
             context.Add(pelicula);
             await context.SaveChangesAsync();
+
+            if (pelicula.EnCartelera)
+            {
+                await notificacionesService.EnviarNotificacionPeliculaEnCartelera(pelicula);
+            }
+
             return pelicula.Id;
         }
 
@@ -219,6 +228,8 @@ namespace BlazorPeliculas.Server.Controllers
         public async Task<ActionResult> Put(Pelicula pelicula)
         {
             var peliculaDB = await context.Peliculas.FirstOrDefaultAsync(x => x.Id == pelicula.Id);
+
+            var enviarNotificacion = pelicula.EnCartelera == true || peliculaDB.EnCartelera == false;
 
             if (peliculaDB == null) { return NotFound(); }
 
@@ -245,6 +256,12 @@ namespace BlazorPeliculas.Server.Controllers
             peliculaDB.GenerosPelicula = pelicula.GenerosPelicula;
 
             await context.SaveChangesAsync();
+
+            if (enviarNotificacion)
+            {
+				await notificacionesService.EnviarNotificacionPeliculaEnCartelera(peliculaDB);
+            }
+
             return NoContent();
 
         }

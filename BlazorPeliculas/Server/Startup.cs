@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -54,6 +55,7 @@ namespace BlazorPeliculas.Server
                 .AddIdentityServerJwt();
 
             services.AddScoped<IAlmacenadorArchivos, AlmacenadorArchivosAzStorage>();
+            services.AddScoped<NotificacionesService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews().AddNewtonsoftJson(
                 options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
@@ -86,6 +88,14 @@ namespace BlazorPeliculas.Server
 
             app.UseEndpoints(endpoints =>
             {
+                //Creamos endpoints para acceder directamente a la llave publica
+                endpoints.MapGet("/api/config/notificacionesllavepublica", async context =>
+                {
+                    var configuration = context.RequestServices.GetRequiredService<IConfiguration>();
+                    var llavePublica = configuration.GetValue<string>("notificaciones:llave_publica");
+                    await context.Response.WriteAsync(llavePublica);
+                });
+
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");

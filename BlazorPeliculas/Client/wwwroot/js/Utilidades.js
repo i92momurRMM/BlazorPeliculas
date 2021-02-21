@@ -41,6 +41,7 @@ async function obtenerEstatusPermisoNotificaciones() {
     const estatusPermiso = Notification.permission;
     if (estatusPermiso === 'denied') { return estatusPermiso; }
 
+    // Comprobamos si existe una suscripcion existente y aunque no se este en la app se puede hacer alguna operacion.
     const worker = await navigator.serviceWorker.getRegistration();
     const suscripcionExistente = await worker.pushManager.getSubscription();
 

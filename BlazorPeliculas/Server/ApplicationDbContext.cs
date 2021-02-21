@@ -94,5 +94,6 @@ namespace BlazorPeliculas.Server
         public DbSet<Persona> Personas { get; set; }
         public DbSet<PeliculaActor> PeliculasActores { get; set; }
         public DbSet<VotoPelicula> VotosPeliculas { get; set; }
+        public DbSet<Notificacion> Notificaciones { get; set; }
     }
 }
